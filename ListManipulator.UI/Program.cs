@@ -1,11 +1,12 @@
 ﻿using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace ListManipulator.UI
 {
     public static class Program
     {
         private static void Main()
-        {
+        {            
             var continueCapturing = true;
             var sb = new StringBuilder();
             while (continueCapturing)
@@ -18,7 +19,7 @@ namespace ListManipulator.UI
                     continueCapturing = false;
                     continue;
                 }
-                sb.Append(sb.Length > 0 ? $", {number}" : number);
+                sb.Append(sb.Length > 0 ? $",{number}" : number);
             }
 
             var app = new App.ListManipulator();

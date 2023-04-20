@@ -1,7 +1,11 @@
-﻿namespace ListManipulator.App
+﻿using Microsoft.Extensions.Logging;
+
+namespace ListManipulator.App
 {
     public class ListManipulator
     {
+        private readonly ILogger<ListManipulator> _logger;
+
         private List<int> NegativeNumbers { get; init; }
         private List<int> PositiveNumbers { get; init; }
 
@@ -9,6 +13,20 @@
         {
             NegativeNumbers = new List<int>();
             PositiveNumbers = new List<int>();
+            _logger = CreateLogger();
+        }
+
+        private ILogger<ListManipulator> CreateLogger()
+        {
+            using var loggerFactory = LoggerFactory.Create(b =>
+            {
+                b.AddFilter("Microsoft", LogLevel.Warning)
+                .AddFilter("System", LogLevel.Warning)
+                .AddFilter("App.ListManipulator", LogLevel.Warning)
+                .AddConsole();
+            });
+
+            return loggerFactory.CreateLogger<App.ListManipulator>();
         }
 
         public void PrintTheNumbers(IReadOnlyList<string> input)
@@ -16,13 +34,12 @@
             if (input.Any())
             {
                 DivideTheInput(input);
-                var finalList = GetFinalList();
-                var output = string.Join(',', finalList);
-                Console.Write(output);
-                Console.Read();
+                var output = string.Join(", ", GetFinalList());
+                _logger.LogInformation(output);
+                Console.ReadLine();
             }
             else
-                Console.WriteLine("No input provided, please try again.");
+                _logger.LogWarning("No input provided, please try again.");
         }
 
         private List<string> GetFinalList()
@@ -30,13 +47,18 @@
             var finalList = new List<string>();
             if (NegativeNumbers.Any())
             {
-                finalList.Add("|");
-                for (var i = 0; i < PositiveNumbers.Count; i++)
-                    finalList.Add(i.ToString());
+                foreach (int num in NegativeNumbers)
+                    finalList.Add(num.ToString());
+                if (PositiveNumbers.Any())
+                {
+                    finalList.Add("|");
+                    foreach (int num in PositiveNumbers)
+                        finalList.Add(num.ToString());
+                }
             }
             else
-                for (var j = 0; j < PositiveNumbers.Count; j++)
-                    finalList.Add(j.ToString());
+                foreach (int num in PositiveNumbers)
+                    finalList.Add(num.ToString());
 
             return finalList;
         }
@@ -45,7 +67,7 @@
         {
             foreach (var t in input)
             {
-                var x = int.Parse(t.Trim());
+                var x = int.Parse(t);
                 if (x < 0)
                     NegativeNumbers.Add(int.Parse(t));
                 else
