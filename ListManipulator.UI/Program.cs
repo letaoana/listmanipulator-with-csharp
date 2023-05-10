@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Microsoft.Extensions.Logging;
+﻿using ListManipulator.App;
+using System.Text;
 
 namespace ListManipulator.UI
 {
@@ -22,8 +22,9 @@ namespace ListManipulator.UI
                 sb.Append(sb.Length > 0 ? $",{number}" : number);
             }
 
-            var app = new App.ListManipulator();
-            app.PrintTheNumbers(sb.ToString().Split(",").ToList());
+            var app = new ListManService(new ListManRepository(), Util.CreateLogger());
+            app.Print(sb.ToString());
+            Console.Read();
         }
 
         private static bool ExitApplication(string number)
