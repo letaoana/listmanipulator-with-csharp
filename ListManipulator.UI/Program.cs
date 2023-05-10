@@ -6,7 +6,7 @@ namespace ListManipulator.UI
     public static class Program
     {
         private static void Main()
-        {            
+        {
             var continueCapturing = true;
             var sb = new StringBuilder();
             while (continueCapturing)

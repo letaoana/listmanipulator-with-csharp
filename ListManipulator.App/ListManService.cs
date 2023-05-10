@@ -5,9 +5,9 @@ namespace ListManipulator.App
     public class ListManService : IListManService
     {
         private readonly IListManRepository _manRepository;
-        private readonly ILogger<ListManRepository> _logger;
+        private readonly ILogger _logger;
 
-        public ListManService(IListManRepository manRepository, ILogger<ListManRepository> logger)
+        public ListManService(IListManRepository manRepository, ILogger logger)
         {
             _manRepository = manRepository;
             _logger = logger;

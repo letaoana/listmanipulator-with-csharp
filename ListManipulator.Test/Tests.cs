@@ -7,14 +7,14 @@ namespace ListManipulator.Test
     public class Tests
     {
         private IListManRepository _listMan;
-        private ILogger<ListManRepository> _logger;
+        private ILogger _logger;
         private ListManService _sut;
 
         [SetUp]
         public void Setup()
         {
             _listMan = Substitute.For<IListManRepository>();
-            _logger = Substitute.For<ILogger<ListManRepository>>();
+            _logger = Substitute.For<ILogger>();
             _sut = new ListManService(_listMan, _logger);
         }
 
@@ -25,10 +25,10 @@ namespace ListManipulator.Test
             _listMan.GetFinalList(Arg.Any<(List<int>, List<int>)>()).Returns(new List<string>());
 
             // Act
-            _sut.Print("1");
+            _sut.Print("-4, 1");
 
             // Assert
-            _listMan.ReceivedWithAnyArgs().DivideTheInput(new List<string> { "1" });
+            _listMan.ReceivedWithAnyArgs().DivideTheInput(Arg.Any<List<string>>());
         }
 
         [Test]
@@ -36,12 +36,13 @@ namespace ListManipulator.Test
         {
             // Arrange
             _listMan.DivideTheInput(Arg.Any<List<string>>()).Returns((new List<int> { -1 }, new List<int> { 3 }));
+            _listMan.GetFinalList(Arg.Any<(List<int>, List<int>)>()).Returns((new List<string> { "-1", "|", "3" }));
 
             // Act
-            _sut.Print("-1,3");
+            _sut.Print("-1, 3");
 
             // Assert
-            _listMan.ReceivedWithAnyArgs().GetFinalList((new List<int> { -1 }, new List<int> { 3 }));
+            _listMan.ReceivedWithAnyArgs().GetFinalList(Arg.Any<(List<int>, List<int>)>());
         }
 
         [Test]
